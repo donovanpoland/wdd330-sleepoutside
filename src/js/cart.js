@@ -15,6 +15,7 @@ function renderCartContents() {
 }
 
 function cartItemTemplate(item) {
+  const qty = item.quantity ?? 1;
   const newItem = `<li class='cart-card divider'>
   <a href='#' class='cart-card__image'>
     <img
@@ -26,8 +27,8 @@ function cartItemTemplate(item) {
     <h2 class='card__name'>${item.Name}</h2>
   </a>
   <p class='cart-card__color'>${item.Colors[0].ColorName}</p>
-  <p class='cart-card__quantity'>qty: 1</p>
-  <p class='cart-card__price'>$${item.FinalPrice}</p>
+  <p class='cart-card__quantity'>qty: ${qty}</p>
+  <p class='cart-card__price'>$${(item.FinalPrice * qty).toFixed(2)}</p>
 </li>`;
 
   return newItem;
