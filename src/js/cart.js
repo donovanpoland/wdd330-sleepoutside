@@ -1,17 +1,17 @@
-import { getLocalStorage } from './utils.mjs';
+import { getLocalStorage } from "./utils.mjs";
 
 function renderCartContents() {
   // Get cart items from local storage, if none get an empty array
-  const cartItems = getLocalStorage('so-cart') || [];
-  const list = document.querySelector('.product-list');
+  const cartItems = getLocalStorage("so-cart") || [];
+  const list = document.querySelector(".product-list");
   // Check if cart is empty
   if (!cartItems.length) {
-    list.innerHTML = '<li class="empty">Your cart is empty.</li>';
+    list.innerHTML = `<li class="empty">Your cart is empty.</li>`;
     return;
   }
 
   const htmlItems = cartItems.map(cartItemTemplate);
-  list.innerHTML = htmlItems.join('');
+  list.innerHTML = htmlItems.join("");
 }
 
 function cartItemTemplate(item) {
