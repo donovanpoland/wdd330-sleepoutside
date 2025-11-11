@@ -23,3 +23,16 @@ export function setClick(selector, callback) {
   });
   qs(selector).addEventListener('click', callback);
 }
+
+export function renderListWithTemplate(templateFn, parentElement, list, position = "afterbegin", clear = false) {
+  if (clear) {
+    parentElement.innerHTML = ""; // clear contents if clear flag is true
+  }
+  
+  // map over the list and generate HTML strings using the template function
+  const htmlStrings = list.map(templateFn);
+
+  // insert the combined HTML string at the specified position in the parent element
+  parentElement.insertAdjacentHTML(position, htmlStrings.join(''));
+}
+
