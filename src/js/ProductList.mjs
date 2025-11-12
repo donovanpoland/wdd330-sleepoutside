@@ -17,6 +17,8 @@ export default class ProductList {
     this.dataSource = dataSource; // instance of ProductData or similar
     this.listElement = listElement; // DOM element to render products into
     this.products = [];
+    // this.currentFilters={}; //for active filters to be later used
+    
   }
 
   async init() {
@@ -41,14 +43,19 @@ export default class ProductList {
       this.listElement.innerHTML = "<p>No products found.</p>";
       return;
     }
-    this.renderList(this.products);
+    const productsToRender = this.filterProducts();
+    this.renderList(productsToRender);
   }
 
  
-
-
-renderList(products) {
+  renderList(products) {
   renderListWithTemplate(productCardTemplate, this.listElement, products);
-}
+  }
+
+  filterProducts() {
+    // Later: filter logic will go here
+    return this.products.slice(0, 4);
+  }
+
 
 }
