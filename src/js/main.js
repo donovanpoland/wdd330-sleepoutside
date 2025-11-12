@@ -7,6 +7,5 @@ const listElement = document.querySelector(".product-list");
 
 const productList = new ProductList("Tents", dataSource, listElement);
 
-console.log("It worked!");
 
 productList.init();
