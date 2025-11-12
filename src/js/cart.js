@@ -1,21 +1,36 @@
 import { getLocalStorage } from "./utils.mjs";
 
 function renderCartContents() {
-  // Get cart items from local storage, if none get an empty array
-  const cartItems = getLocalStorage("so-cart") || [];
+  // Get cart items from local storage, normalize to array
+  let cartItems = getLocalStorage("so-cart") || [];
+  if (!Array.isArray(cartItems)) {
+    cartItems = cartItems ? [cartItems] : [];
+  }
+
   const list = document.querySelector(".product-list");
-  // Check if cart is empty
+
   if (!cartItems.length) {
     list.innerHTML = `<li class="empty">Your cart is empty.</li>`;
     return;
   }
 
-  const htmlItems = cartItems.map(cartItemTemplate);
+  // Group identical products and track quantities
+  const groupedItems = cartItems.reduce((map, item) => {
+    const existing = map.get(item.Id);
+    if (existing) {
+      existing.qty += 1;
+    } else {
+      map.set(item.Id, { ...item, qty: 1 });
+    }
+    return map;
+  }, new Map());
+
+  const htmlItems = [...groupedItems.values()].map(cartItemTemplate);
   list.innerHTML = htmlItems.join("");
 }
 
 function cartItemTemplate(item) {
-  const qty = item.quantity ?? 1;
+  const qty = item.qty;
   const newItem = `<li class='cart-card divider'>
   <a href='#' class='cart-card__image'>
     <img
