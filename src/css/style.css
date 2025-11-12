@@ -261,3 +261,16 @@ footer {
   font-size: var(--small-font);
   padding: 1em;
 }
+
+
+/* TOTAL CART */
+.cart-footer {
+  margin-top: 2rem;
+  text-align: right;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.hide {
+  display: none;
+}
