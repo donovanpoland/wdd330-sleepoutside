@@ -1,4 +1,11 @@
 import { getLocalStorage } from "./utils.mjs";
+import { removeProductFromCart } from "./product";
+import ProductData from "./ProductData.mjs";
+
+const dataSource = new ProductData("tents");
+
+const list = document.querySelector(".product-list");
+list.addEventListener("click", removeButtonClick);
 
 function renderCartContents() {
   // Get cart items from local storage, normalize to array
@@ -8,9 +15,6 @@ function renderCartContents() {
   }
 
   const list = document.querySelector(".product-list");
-
-  // showCartTotal
-  showCartTotal(cartItems);
 
   if (!cartItems.length) {
     list.innerHTML = `<li class="empty">Your cart is empty.</li>`;
@@ -28,41 +32,30 @@ function renderCartContents() {
     return map;
   }, new Map());
 
+  // Display cart using template
   const htmlItems = [...groupedItems.values()].map(cartItemTemplate);
   list.innerHTML = htmlItems.join("");
 }
 
 function cartItemTemplate(item) {
   const qty = item.qty;
-  const newItem = `<li class='cart-card divider'>
-  <a href='#' class='cart-card__image'>
+  const newItem = `<li class="cart-card divider">
+  <a href="#" class="cart-card__image">
     <img
-      src='${item.Image}'
-      alt='${item.Name}'
+      src="${item.Image}"
+      alt="${item.Name}"
     />
   </a>
-  <a href='#'>
-    <h2 class='card__name'>${item.Name}</h2>
+  <a href="#">
+    <h2 class="card__name">${item.Name}</h2>
   </a>
-  <p class='cart-card__color'>${item.Colors[0].ColorName}</p>
-  <p class='cart-card__quantity'>qty: ${qty}</p>
-  <p class='cart-card__price'>$${(item.FinalPrice * qty).toFixed(2)}</p>
+  <p class="cart-card__color">${item.Colors[0].ColorName}</p>
+  <p class="cart-card__quantity">qty: ${qty}</p>
+  <p class="cart-card__price">$${(item.FinalPrice * qty).toFixed(2)}</p>
+  <button id="remove" data-id="${item.Id}">❌</button>
 </li>`;
 
   return newItem;
-}
-
-//function for total cart (TOTAL CART):
-function showCartTotal(cartItems) {
-  // convert FinalPrice a number
-  const total = cartItems.reduce((sum, item) => sum + Number(item.FinalPrice), 0);
-  const formattedTotal = total.toFixed(2);
-
-  const footer = document.querySelector(".cart-footer");
-  if (footer) {
-    footer.classList.remove("hide");
-    footer.querySelector(".cart-total").textContent = `Total: $${formattedTotal}`;
-  }
 }
 
 renderCartContents();

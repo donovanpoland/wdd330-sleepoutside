@@ -17,6 +17,20 @@ function addProductToCart(product) {
   setLocalStorage("so-cart", cartItems);
 }
 
+export function removeProductFromCart(product) {
+  // Get cart items from local storage, normalize to array
+  let cartItems = getLocalStorage("so-cart") || [];
+
+  const index = cartItems.findIndex((item) => item.Id === product.Id);
+  if (index !== -1) {
+    cartItems.splice(index, 1);
+    setLocalStorage("so-cart", cartItems);
+  }
+
+  // Update local storage/cart
+  setLocalStorage("so-cart", cartItems);
+}
+
 // add to cart button event handler
 async function addToCartHandler(e) {
   const product = await dataSource.findProductById(e.target.dataset.id);
