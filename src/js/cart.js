@@ -1,4 +1,4 @@
-import { getLocalStorage } from "./utils.mjs";
+import { getLocalStorage, loadHeaderFooter } from "./utils.mjs";
 import { removeProductFromCart } from "./product";
 import ProductData from "./ProductData.mjs";
 
@@ -68,4 +68,5 @@ async function removeButtonClick(event) {
   renderCartContents();
 }
 
+loadHeaderFooter();
 renderCartContents();
