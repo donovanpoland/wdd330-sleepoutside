@@ -1,6 +1,6 @@
 :root {
   --font-body: Arial, Helvetica, sans-serif;
-  --font-headline: Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  --font-headline: Haettenschweiler, "Arial Narrow Bold", sans-serif;
   /* colors */
   --primary-color: #f0a868;
   --secondary-color: #525b0f;
@@ -108,6 +108,19 @@ button {
   border: 0;
   font-size: var(--large-font);
   cursor: pointer;
+}
+
+button#remove {
+  background-color: transparent;
+  text-shadow: 0 4px 4px black;
+}
+
+button#remove:hover {
+  text-shadow: 0 2px 2px black;
+}
+
+.product-list button#remove {
+  justify-content: left;
 }
 
 .divider {
@@ -241,6 +254,13 @@ button {
   grid-column: 3;
 }
 
+.cart-card button#remove {
+  grid-column: 4;
+  grid-row: 1 / span 2;
+  margin: 0;
+  padding: 0;
+}
+
 @media screen and (min-width: 500px) {
   body {
     max-width: 1080px;
@@ -253,11 +273,35 @@ button {
 
   .cart-card {
     font-size: inherit;
-    grid-template-columns: 150px auto 15%;
+    grid-template-columns: 150px auto 15% 44px;
   }
 }
 
 footer {
   font-size: var(--small-font);
   padding: 1em;
+}
+
+/* TOTAL CART */
+.cart-footer {
+  margin-top: 2rem;
+  text-align: right;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.hide {
+  display: none;
+}
+
+.card_prices_list {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.product-card__suggested {
+  color: #b36f67;
+  text-decoration: line-through;
+  font-style: italic;
 }
