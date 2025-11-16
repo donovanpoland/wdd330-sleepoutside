@@ -1,15 +1,16 @@
-import { getLocalStorage } from "./utils.mjs";
+import { getLocalStorage, loadHeaderFooter } from "./utils.mjs";
 import { removeProductFromCart } from "./product.js";
 import ProductData from "./ProductData.mjs";
 
 const dataSource = new ProductData("tents");
+
 
 const list = document.querySelector(".product-list");
 // Get cart footer on page
 const footer = document.querySelector(".cart-footer");
 // Get element for placing total
 const totalElement = document.querySelector(".cart-total");
-
+// Add event listener to add to cart buttons
 list.addEventListener("click", removeButtonClick);
 
 function renderCartContents() {
@@ -23,6 +24,7 @@ function renderCartContents() {
   // SEE JSON HERE, VERIFY
   //console.log("CART ITEMS RAW:", cartItems);
 
+  // If cart is empty display message
   if (!cartItems.length) {
     list.innerHTML = `<li class="empty">Your cart is empty.</li>`;
     updateCartTotal(0);
@@ -86,23 +88,21 @@ function cartItemTemplate(item) {
 
 // funcion para eliminar el producto del carrito
 // function to remove the product from the cart.
-function removeButtonClick(event) {
-  if (event.target && event.target.id === "remove") {
-    const productId = event.target.dataset.id;
+async function removeButtonClick(event) {
+  if (!event.target.matches("button#remove")) return;
 
-    // buscar el producto completo en el carrito
-    // look up the full product in the cart
-    const cartItems = getLocalStorage("so-cart") || [];
-    const productToRemove = cartItems.find((item) => item.Id == productId);
+  const productId = event.target.dataset.id;
+  const product = await dataSource.findProductById(productId);
+  if (!product) return;
 
-    if (productToRemove) {
-      removeProductFromCart(productToRemove);
+    if (product) {
+      removeProductFromCart(product);
       // vuelve a pintar el carrito
       // re-render the cart.
       renderCartContents();
     }
   }
-}
+
 
 function updateCartTotal(total) {
   if (!footer || !totalElement) {
