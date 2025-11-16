@@ -122,4 +122,5 @@ function updateCartTotal(total) {
   totalElement.textContent = `Total: $${total.toFixed(2)}`;
 }
 
+loadHeaderFooter();
 renderCartContents();
