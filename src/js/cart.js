@@ -64,13 +64,10 @@ function renderCartContents() {
 
 function cartItemTemplate(item) {
   const qty = item.qty;
-  // ruta de la imagen corregida
-  // corrected image path.
-  const fixedImagePath = `../public${item.Image}`;
   const newItem = `<li class="cart-card divider">
   <a href="#" class="cart-card__image">
      <img
-      src="${fixedImagePath}"
+      src="${item.Image}"
       alt="${item.Name}"
     />
   </a>
