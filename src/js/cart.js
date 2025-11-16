@@ -5,9 +5,10 @@ import ProductData from "./ProductData.mjs";
 const dataSource = new ProductData("tents");
 
 const list = document.querySelector(".product-list");
-
-const footer = document.querySelector(".cart-footer");  //total cart
-const totalElement = document.querySelector(".cart-total"); //total cart
+// Get cart footer on page
+const footer = document.querySelector(".cart-footer");
+// Get element for placing total
+const totalElement = document.querySelector(".cart-total");
 
 list.addEventListener("click", removeButtonClick);
 
@@ -18,9 +19,9 @@ function renderCartContents() {
     cartItems = cartItems ? [cartItems] : [];
   }
 
-  console.log("CART ITEMS RAW:", cartItems); // <-- AQUI VER JSON VERIFICAR
-
-  const list = document.querySelector(".product-list");
+  // AQUI VER JSON VERIFICAR
+  // SEE JSON HERE, VERIFY
+  //console.log("CART ITEMS RAW:", cartItems);
 
   if (!cartItems.length) {
     list.innerHTML = `<li class="empty">Your cart is empty.</li>`;
@@ -39,26 +40,31 @@ function renderCartContents() {
     return map;
   }, new Map());
 
-  // --- NUEVO: convertir a array para calcular total ---
+  // Convertir a array para calcular total
+  // Convert to array to calculate total
   const groupedArray = [...groupedItems.values()];
 
   // Display cart using template
   const htmlItems = groupedArray.map(cartItemTemplate);
   list.innerHTML = htmlItems.join("");
 
-  // --- NUEVO: calcular el total del carrito ---
+  // Calcular el total del carrito
+  // Calculate the cart total.
   const total = groupedArray.reduce(
     (sum, item) => sum + item.FinalPrice * item.qty,
-    0
+    0,
   );
 
-  updateCartTotal(total);  // <-- ACTUALIZA EL TOTAL
+  // <-- ACTUALIZA EL TOTAL
+  // <-- UPDATE THE TOTAL
+  updateCartTotal(total);
 }
 
 function cartItemTemplate(item) {
   const qty = item.qty;
-
-  const fixedImagePath = `../public${item.Image}`;  // ruta de la imagen corregida
+  // ruta de la imagen corregida
+  // corrected image path.
+  const fixedImagePath = `../public${item.Image}`;
   const newItem = `<li class="cart-card divider">
   <a href="#" class="cart-card__image">
      <img
@@ -79,17 +85,21 @@ function cartItemTemplate(item) {
 }
 
 // funcion para eliminar el producto del carrito
+// function to remove the product from the cart.
 function removeButtonClick(event) {
   if (event.target && event.target.id === "remove") {
     const productId = event.target.dataset.id;
 
     // buscar el producto completo en el carrito
+    // look up the full product in the cart
     const cartItems = getLocalStorage("so-cart") || [];
     const productToRemove = cartItems.find((item) => item.Id == productId);
 
     if (productToRemove) {
       removeProductFromCart(productToRemove);
-      renderCartContents(); // ← vuelve a pintar el carrito
+      // vuelve a pintar el carrito
+      // re-render the cart.
+      renderCartContents();
     }
   }
 }
@@ -97,7 +107,8 @@ function removeButtonClick(event) {
 function updateCartTotal(total) {
   if (!footer || !totalElement) {
     // Si no existen elementos, solo logueamos
-    console.log("Total (no footer en DOM):", total.toFixed(2));
+    // If there aren’t any elements, we just log it
+    //console.log("Total (no footer in DOM):", total.toFixed(2));
     return;
   }
 
