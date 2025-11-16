@@ -1,10 +1,15 @@
 import { getLocalStorage } from "./utils.mjs";
-import { removeProductFromCart } from "./product";
+import { removeProductFromCart } from "./product.js";
 import ProductData from "./ProductData.mjs";
 
 const dataSource = new ProductData("tents");
 
 const list = document.querySelector(".product-list");
+// Get cart footer on page
+const footer = document.querySelector(".cart-footer");
+// Get element for placing total
+const totalElement = document.querySelector(".cart-total");
+
 list.addEventListener("click", removeButtonClick);
 
 function renderCartContents() {
@@ -14,9 +19,13 @@ function renderCartContents() {
     cartItems = cartItems ? [cartItems] : [];
   }
 
-  // If cart is Empty display message
+  // AQUI VER JSON VERIFICAR
+  // SEE JSON HERE, VERIFY
+  //console.log("CART ITEMS RAW:", cartItems);
+
   if (!cartItems.length) {
     list.innerHTML = `<li class="empty">Your cart is empty.</li>`;
+    updateCartTotal(0);
     return;
   }
 
@@ -31,17 +40,35 @@ function renderCartContents() {
     return map;
   }, new Map());
 
+  // Convertir a array para calcular total
+  // Convert to array to calculate total
+  const groupedArray = [...groupedItems.values()];
+
   // Display cart using template
-  const htmlItems = [...groupedItems.values()].map(cartItemTemplate);
+  const htmlItems = groupedArray.map(cartItemTemplate);
   list.innerHTML = htmlItems.join("");
+
+  // Calcular el total del carrito
+  // Calculate the cart total.
+  const total = groupedArray.reduce(
+    (sum, item) => sum + item.FinalPrice * item.qty,
+    0,
+  );
+
+  // <-- ACTUALIZA EL TOTAL
+  // <-- UPDATE THE TOTAL
+  updateCartTotal(total);
 }
 
 function cartItemTemplate(item) {
   const qty = item.qty;
+  // ruta de la imagen corregida
+  // corrected image path.
+  const fixedImagePath = `../public${item.Image}`;
   const newItem = `<li class="cart-card divider">
   <a href="#" class="cart-card__image">
-    <img
-      src="${item.Image}"
+     <img
+      src="${fixedImagePath}"
       alt="${item.Name}"
     />
   </a>
@@ -57,15 +84,42 @@ function cartItemTemplate(item) {
   return newItem;
 }
 
-async function removeButtonClick(event) {
-  if (!event.target.matches("button#remove")) return;
+// funcion para eliminar el producto del carrito
+// function to remove the product from the cart.
+function removeButtonClick(event) {
+  if (event.target && event.target.id === "remove") {
+    const productId = event.target.dataset.id;
 
-  const productId = event.target.dataset.id;
-  const product = await dataSource.findProductById(productId);
-  if (!product) return;
+    // buscar el producto completo en el carrito
+    // look up the full product in the cart
+    const cartItems = getLocalStorage("so-cart") || [];
+    const productToRemove = cartItems.find((item) => item.Id == productId);
 
-  removeProductFromCart(product);
-  renderCartContents();
+    if (productToRemove) {
+      removeProductFromCart(productToRemove);
+      // vuelve a pintar el carrito
+      // re-render the cart.
+      renderCartContents();
+    }
+  }
+}
+
+function updateCartTotal(total) {
+  if (!footer || !totalElement) {
+    // Si no existen elementos, solo logueamos
+    // If there aren’t any elements, we just log it
+    //console.log("Total (no footer in DOM):", total.toFixed(2));
+    return;
+  }
+
+  if (total <= 0) {
+    footer.classList.add("hide");
+    totalElement.textContent = `Total: $0.00`;
+    return;
+  }
+
+  footer.classList.remove("hide");
+  totalElement.textContent = `Total: $${total.toFixed(2)}`;
 }
 
 renderCartContents();
