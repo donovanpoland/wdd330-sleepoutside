@@ -76,7 +76,7 @@ function productDetailsTemplate(product) {
   return `
     <h3>${product.Brand.Name}</h3>
     <h2 class="divider">${product.NameWithoutBrand}</h2>
-    <img class="divider" src="${product.Image}" alt="${product.NameWithoutBrand}" />
+    <img class="divider" src="${product.Images.PrimaryLarge || product.Image}" alt="${product.NameWithoutBrand}" />
     
     <div class="card_prices_list">
       ${hasDiscount ? `

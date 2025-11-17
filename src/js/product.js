@@ -2,8 +2,15 @@ import { getParam, loadHeaderFooter } from "./utils.mjs";
 import ProductData from "./ProductData.mjs";
 import ProductDetails from "./ProductDetails.mjs";
 
-const productId = getParam("product");
-const dataSource = new ProductData("tents");
-loadHeaderFooter();
-const product = new ProductDetails(productId, dataSource);
-product.init();
+async function main() {
+  const category = getParam("category") || "tents"; // fallback to "tents"
+  const productId = getParam("product");
+
+  await loadHeaderFooter();
+
+  const dataSource = new ProductData(category);
+  const productDetails = new ProductDetails(productId, dataSource);
+  await productDetails.init();
+}
+
+main();

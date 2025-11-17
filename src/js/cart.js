@@ -1,4 +1,8 @@
-import { getLocalStorage, setLocalStorage, loadHeaderFooter } from "./utils.mjs";
+import {
+  getLocalStorage,
+  setLocalStorage,
+  loadHeaderFooter,
+} from "./utils.mjs";
 import ProductData from "./ProductData.mjs";
 
 const dataSource = new ProductData("tents");
@@ -16,7 +20,7 @@ function renderCartContents() {
 
   if (!cartItems.length) {
     list.innerHTML = `<li class="empty">Your cart is empty.</li>`;
-    showCartTotal([]);      // show zero total
+    showCartTotal([]); // show zero total
     return;
   }
 
@@ -26,14 +30,13 @@ function renderCartContents() {
   showCartTotal(cartItems);
 }
 
-
 function cartItemTemplate(item) {
   const qty = item.quantity || 1;
 
   return `
 <li class="cart-card divider">
   <a href="#" class="cart-card__image">
-    <img src="${item.Image}" alt="${item.Name}" />
+    <img src="${item.Images.PrimaryMedium || item.Image}" alt="${item.Name}" />
   </a>
 
   <a href="#">
@@ -60,7 +63,7 @@ async function removeButtonClick(event) {
 export function removeProductFromCart(productId) {
   let cartItems = getLocalStorage("so-cart") || [];
 
-  const index = cartItems.findIndex(item => item.Id === productId);
+  const index = cartItems.findIndex((item) => item.Id === productId);
 
   if (index === -1) return;
 
@@ -77,7 +80,7 @@ export function removeProductFromCart(productId) {
 function showCartTotal(cartItems) {
   const total = cartItems.reduce((sum, item) => {
     const qty = item.quantity || 1;
-    return sum + (Number(item.FinalPrice) * qty);
+    return sum + Number(item.FinalPrice) * qty;
   }, 0);
 
   const formattedTotal = total.toFixed(2);
@@ -85,9 +88,9 @@ function showCartTotal(cartItems) {
   const footer = document.querySelector(".cart-footer");
   if (footer) {
     footer.classList.remove("hide");
-    footer.querySelector(".cart-total").textContent = `Total: $${formattedTotal}`;
+    footer.querySelector(".cart-total").textContent =
+      `Total: $${formattedTotal}`;
   }
 }
-
 
 renderCartContents();
