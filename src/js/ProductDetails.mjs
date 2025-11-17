@@ -67,20 +67,33 @@ addProductToCart(product) {
 
 }
 
- function productDetailsTemplate(product) {
-  return `<h3>${product.Brand.Name}</h3>
+function productDetailsTemplate(product) {
+  const hasDiscount = product.SuggestedRetailPrice > product.FinalPrice;
+  const discountPercent = hasDiscount
+    ? Math.round(((product.SuggestedRetailPrice - product.FinalPrice) / product.SuggestedRetailPrice) * 100)
+    : 0;
+
+  return `
+    <h3>${product.Brand.Name}</h3>
     <h2 class="divider">${product.NameWithoutBrand}</h2>
-    <img
-      class="divider"
-      src="${product.Image}"
-      alt="${product.NameWithoutBrand}"
-    />
-    <p class="product-card__price">$${product.FinalPrice}</p>
+    <img class="divider" src="${product.Image}" alt="${product.NameWithoutBrand}" />
+    
+    <div class="card_prices_list">
+      ${hasDiscount ? `
+        <p class="suggested_price">Suggested Retail Price: <span class="product-card__suggested">$${product.SuggestedRetailPrice.toFixed(2)}</span></p>
+        ` : ''
+      }
+      
+      
+      <p class="our-price">You Pay: $${product.FinalPrice.toFixed(2)}</p>
+      
+      ${hasDiscount ? `<p class="discount">Save ${discountPercent}%!</p>` : ''}
+    </div>
+    
     <p class="product__color">${product.Colors[0].ColorName}</p>
-    <p class="product__description">
-    ${product.DescriptionHtmlSimple}
-    </p>
+    <p class="product__description">${product.DescriptionHtmlSimple}</p>
     <div class="product-detail__add">
       <button id="addToCart" data-id="${product.Id}">Add to Cart</button>
-    </div>`;
+    </div>
+  `;
 }
